@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ballon</title>
+    <link rel='stylesheet' href='stylesheets/reset.css' />
+    <link rel='stylesheet' href='stylesheets/style.css' />
+  </head>
+  <body>
+
+    <div id="world"></div>
+    <p id="textContainer_1" class="textContainer"></p>
+    <p id="textContainer_2" class="textContainer"></p>
+
+    <script src="js/lib/three.js"></script>
+    <script src="js/lib/bluebird.min.js"></script>
+    <script src="js/lib/jquery-3.1.0.min.js"></script>
+
+    <script src="js/app.js"></script>
+    <script src="js/util.js"></script>
+    <script src="js/scene/util/eventBus.js"></script>
+    <script src="js/scene/util/modelLoader.js"></script>
+    <script src="js/scene/scene.js"></script>
+    <script src="js/scene/object/lights.js"></script>
+    <script src="js/scene/object/camera.js"></script>
+    <script src="js/scene/object/ballon.js"></script>
+    <script src="js/scene/object/cloud.js"></script>
+    <script src="js/scene/object/mountain.js"></script>
+    <script src="js/scene/object/compositeText.js"></script>
+    <script src="js/scene/generator/cloudsGenerator.js"></script>
+    <script src="js/scene/controller/ballonController.js"></script>
+    <script src="js/scene/controller/cloudsController.js"></script>
+    <script src="js/scene/controller/sceneController.js"></script>
+    <script src="js/scene/renderer.js"></script>
+
+    <script type="text/javascript">
+        window.addEventListener('resize', app.onWindowResize.bind(app), false);
+        window.addEventListener('load', function() {
+            app.loadModels([
+                "/models/ballon.json",
+                "/models/cloud.json",
+                "/models/mountain.json"
+            ]).then(function(models) {
+                app.init(models);
+            });
+        });
+    </script>
+  </body>
+</html>
