@@ -8,6 +8,7 @@ app.classes.SceneController.prototype = {
         ballonInitialYPos: -0.20,
         nextSceneStep: 8,
         lastScenePosition: 24,
+        flatCloudsRotationFactor: 0.004,
         startMoveCameraPosition: 0
     },
 
@@ -22,11 +23,13 @@ app.classes.SceneController.prototype = {
         this.cloudsController = options.cloudsController;
         this.compositeText = options.compositeText;
         this.eventBus = options.eventBus;
+        this.flatClouds = options.flatClouds;
 
         this.cameraFrustum = this.camera.getFrustum();
 
         this._addObjectsToTheScene();
         this._setObjectsInitialPosition();
+        this._setShadowLightTarget();
 
         this.currentScenePosition = this.settings.ballonInitialYPos;
         this.compositeText.fadeIn();
@@ -35,6 +38,13 @@ app.classes.SceneController.prototype = {
     },
 
     _setObjectsInitialPosition: function() {
+
+        this.flatClouds.setPosition({
+            x: -1,
+            y: 2,
+            z: 37.5
+        });
+
         this.ballonController.setBallonPosition({
             x: 0,
             y: this.settings.ballonInitialYPos,
@@ -69,8 +79,7 @@ app.classes.SceneController.prototype = {
         this.scene.add(this.lights.ambientLight);
         this.scene.add(this.ballon.getMesh());
         this.scene.add(this.mountain.getMesh());
-
-        this.lights.shadowLight.target = this.ballon.mesh;
+        this.scene.add(this.flatClouds.getMesh());
 
         this._generateClouds();
     },
@@ -104,6 +113,10 @@ app.classes.SceneController.prototype = {
         this.clouds.forEach(function(cloud) {
             self.scene.add(cloud.getMesh());
         });
+    },
+
+    _setShadowLightTarget: function() {
+        this.lights.shadowLight.target = this.ballon.getMesh();
     },
 
     _initEvents: function() {
@@ -172,6 +185,7 @@ app.classes.SceneController.prototype = {
         this.ballonController.animateBallon(this.currentScenePosition);
         this._moveCameraToFollowBallon();
         this.cloudsController.animateClouds();
+        this.flatClouds.rotateByY(this.settings.flatCloudsRotationFactor);
     },
 
     renderScene: function() {

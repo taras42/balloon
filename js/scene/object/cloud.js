@@ -21,12 +21,8 @@ app.classes.Cloud = function(options) {
         z: 0
     }
 
-    this.mesh.material.materials.forEach(function(material) {
-        material.side = THREE.DoubleSide;
-    });
-
     this.resetToInitialPosition();
-    this.applyInitialRotation();
+    this.rotateToInitialPosition();
 };
 
 app.classes.Cloud.prototype = {
@@ -35,9 +31,14 @@ app.classes.Cloud.prototype = {
         return this.mesh;
     },
 
-    applyInitialRotation: function() {
-        this.mesh.rotation.set(this.initialRotation.x,
-            this.initialRotation.y, this.initialRotation.z);
+    rotate: function(options) {
+        options = options || {};
+
+        this.mesh.rotation.set(options.x, options.y, options.z);
+    },
+
+    rotateByY: function(factor) {
+        this.mesh.rotation.y += factor;
     },
 
     setPosition: function(options) {
@@ -60,6 +61,10 @@ app.classes.Cloud.prototype = {
 
     resetToInitialPosition: function() {
         this.setPosition(this.initialPosition);
+    },
+
+    rotateToInitialPosition: function() {
+        this.initialRotation && this.rotate(this.initialRotation);
     },
 
     setInverseYByModifier: function(inverseYByModifier) {
