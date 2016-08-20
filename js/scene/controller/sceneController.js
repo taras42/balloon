@@ -86,8 +86,8 @@ app.classes.SceneController.prototype = {
             cloudsCount: 10,
             sceneHeigh: 8,
             zPosition: {
-                min: 30,
-                max: 60
+                min: [30, 35, 40],
+                max: [60, 65, 70]
             },
             minScale: 0.7,
             paddingFromCenterByX: 2,

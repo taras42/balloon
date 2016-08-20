@@ -84,13 +84,15 @@ app.classes.CloudsGenerator.prototype = {
 
     _getZPosition: function(options) {
         var zPosition = options.zPosition || {
-            min: 2,
-            max: 4
-        };
+            min: [2],
+            max: [4]
+        },
+            minZPositionIndex = Math.floor(Math.random() * zPosition.min.length),
+            maxZPositionIndex = Math.floor(Math.random() * zPosition.max.length);
 
         zPosition = Math.round(Math.random())
-            ? zPosition.max
-            : zPosition.min;
+            ? zPosition.max[maxZPositionIndex]
+            : zPosition.min[minZPositionIndex];
 
         return zPosition;
     },
