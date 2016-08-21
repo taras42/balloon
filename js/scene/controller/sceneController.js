@@ -40,7 +40,7 @@ app.classes.SceneController.prototype = {
     _setObjectsInitialPosition: function() {
 
         this.flatClouds.setPosition({
-            x: -1,
+            x: 0,
             y: 2,
             z: 37.5
         });
