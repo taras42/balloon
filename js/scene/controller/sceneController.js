@@ -5,7 +5,7 @@ app.classes.SceneController = function(options) {
 app.classes.SceneController.prototype = {
 
     settings: {
-        ballonInitialYPos: -0.20,
+        ballonInitialYPos: 0.65,
         nextSceneStep: 8,
         lastScenePosition: 24,
         flatCloudsRotationFactor: 0.004,
@@ -48,7 +48,7 @@ app.classes.SceneController.prototype = {
         this.ballonController.setBallonPosition({
             x: 0,
             y: this.settings.ballonInitialYPos,
-            z: 50
+            z: 52
         });
 
         this.mountain.setPosition({
@@ -95,8 +95,8 @@ app.classes.SceneController.prototype = {
             cloudsCount: 10,
             sceneHeigh: 8,
             zPosition: {
-                min: [30, 35, 40],
-                max: [60, 65, 70]
+                min: [20, 25, 30],
+                max: [70, 75, 80]
             },
             minScale: 0.7,
             paddingFromCenterByX: 2,

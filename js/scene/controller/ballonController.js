@@ -10,7 +10,7 @@ app.classes.BallonController.prototype = {
         rotationValue: 0,
         rotationStep: 0.018,
         rotationSpeed: 240,
-        applyRotationAfter: -0.20
+        applyRotationAfter: 0.7
     },
 
     setBallonPosition: function(position) {
