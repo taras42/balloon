@@ -7,7 +7,7 @@ app.classes.SceneController.prototype = {
     settings: {
         ballonInitialYPos: 0.65,
         nextSceneStep: 8,
-        lastScenePosition: 24,
+        lastScenePosition: 32,
         flatCloudsRotationFactor: 0.004,
         startMoveCameraPosition: 0
     },
@@ -90,7 +90,7 @@ app.classes.SceneController.prototype = {
         this.cloudsController.setCameraFrustum(this.cameraFrustum);
 
         this.clouds = this.cloudsController.generateClouds({
-            topBoundary: 26,
+            topBoundary: 34,
             bottomBoundary: 2,
             cloudsCount: 10,
             sceneHeigh: 8,
