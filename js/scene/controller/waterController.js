@@ -6,14 +6,15 @@ app.classes.WaterController = function(options) {
 app.classes.WaterController.prototype = {
 
     settings: {
-        surfaceVertexY: 1.18,
-        fluctuationStep: 0.1,
+        surfaceVertexY: 0.7,
+        fluctuationStep: 0.08,
         fluctuationSpeed: 240,
-        value: 0
+        disturtionValue: 5
     },
 
     initialize: function() {
         this.surfaceVertices = [];
+        this.disturtionValues = [];
         this._collectSurfaceVertices();
     },
 
@@ -25,20 +26,20 @@ app.classes.WaterController.prototype = {
 
             if (vertex.y >= this.settings.surfaceVertexY) {
                 this.surfaceVertices.push(vertex);
+                this.disturtionValues.push(Math.random() * this.settings.disturtionValue);
             }
         }
     },
-
 
     animateWater: function() {
         for (var i = 0; i < this.surfaceVertices.length; i++) {
             var vertex = this.surfaceVertices[i];
 
-            vertex.y += Math.cos(this.settings.value) / this.settings.fluctuationSpeed;
-            this.settings.value += this.settings.fluctuationStep;
+            vertex.y += Math.cos(this.disturtionValues[i]) / this.settings.fluctuationSpeed;
+            this.disturtionValues[i] += this.settings.fluctuationStep;
         }
 
-        this.water.getMesh().geometry.verticesNeedUpdate = true;
+        this.water.update();
     }
 
 }

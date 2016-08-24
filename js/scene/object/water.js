@@ -21,5 +21,9 @@ app.classes.Water.prototype = {
 
     rotateByY: function(rotation) {
         this.mesh.rotation.y = rotation;
+    },
+
+    update: function() {
+        this.getMesh().geometry.verticesNeedUpdate = true;
     }
 }

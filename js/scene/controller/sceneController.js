@@ -57,9 +57,9 @@ app.classes.SceneController.prototype = {
         });
 
         this.water.setPosition({
-            x: 1.6,
-            y: -3.25,
-            z: 45.5
+            x: 0.3,
+            y: -2.7,
+            z: 45
         });
 
         this.water.rotateByY(-Math.PI/2);
