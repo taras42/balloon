@@ -21,6 +21,7 @@ app.classes.SceneController.prototype = {
         this.renderer = options.renderer;
         this.ballonController = options.ballonController;
         this.cloudsController = options.cloudsController;
+        this.waterController = options.waterController;
         this.compositeText = options.compositeText;
         this.eventBus = options.eventBus;
         this.flatClouds = options.flatClouds;
@@ -199,6 +200,7 @@ app.classes.SceneController.prototype = {
         this.ballonController.animateBallon(this.currentScenePosition);
         this._moveCameraToFollowBallon();
         this.cloudsController.animateClouds();
+        this.waterController.animateWater();
         this.flatClouds.rotateByY(this.settings.flatCloudsRotationFactor);
     },
 

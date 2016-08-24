@@ -34,6 +34,10 @@ var app = {
 
         var water = new this.classes.Water(models[4]);
 
+        var waterController = new this.classes.WaterController({
+            water: water
+        });
+
         var renderer = this.createRenderer(document.getElementById("world"));
 
         this.createSceneController({
@@ -41,6 +45,7 @@ var app = {
             compositeText: compositeText,
             cloudsController: cloudsController,
             ballonController: ballonController,
+            waterController: waterController,
             ballon: ballon,
             mountain: mountain,
             water: water,

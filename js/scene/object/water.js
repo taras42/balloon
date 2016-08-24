@@ -5,17 +5,9 @@ app.classes.Water = function(options) {
     this.mesh = new THREE.Mesh(geometry, new THREE.MultiMaterial(materials));
     this.mesh.castShadow = true;
     this.mesh.receiveShadow = true;
-
-    // this.mesh.material.materials.forEach(function(material) {
-    //     material.side = THREE.DoubleSide;
-    // });
-
-    this.initialize(options);
 }
 
 app.classes.Water.prototype = {
-
-    initialize: function(options) {},
 
     getMesh: function() {
         return this.mesh;
