@@ -32,6 +32,8 @@ var app = {
         var mountain = new this.classes.Mountain(models[2]);
         var flatCloudsFactory = new this.classes.CloudFactory(models[3]);
 
+        var water = new this.classes.Water(models[4]);
+
         var renderer = this.createRenderer(document.getElementById("world"));
 
         this.createSceneController({
@@ -41,6 +43,7 @@ var app = {
             ballonController: ballonController,
             ballon: ballon,
             mountain: mountain,
+            water: water,
             flatClouds: flatCloudsFactory.create(),
             camera: camera,
             lights: lights,

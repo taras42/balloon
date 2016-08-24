@@ -24,6 +24,7 @@ app.classes.SceneController.prototype = {
         this.compositeText = options.compositeText;
         this.eventBus = options.eventBus;
         this.flatClouds = options.flatClouds;
+        this.water = options.water;
 
         this.cameraFrustum = this.camera.getFrustum();
 
@@ -53,6 +54,14 @@ app.classes.SceneController.prototype = {
             y: 2,
             z: 40
         });
+
+        this.water.setPosition({
+            x: 1.6,
+            y: -3.25,
+            z: 45.5
+        });
+
+        this.water.rotateByY(-Math.PI/2);
 
         this.ballonController.setBallonPosition({
             x: 5,
@@ -85,6 +94,7 @@ app.classes.SceneController.prototype = {
         this.scene.add(this.ballon.getMesh());
         this.scene.add(this.mountain.getMesh());
         this.scene.add(this.flatClouds.getMesh());
+        this.scene.add(this.water.getMesh());
 
         this._generateClouds();
     },
