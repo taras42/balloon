@@ -68,11 +68,9 @@ app.classes.CloudsGenerator.prototype = {
         var zPosition = this._getZPosition(options);
         var moveModifier = this._getInversionModifier();
         var moveByXAxisStep = this._getMoveByXAxisStep(options, moveModifier);
-        var moveByZAxisStep = this._getMoveByZAxisStep(options, moveModifier);
 
         return {
             moveByXAxisStep: moveByXAxisStep,
-            moveByZAxisStep: moveByZAxisStep,
             initialPosition: {
                 x: xPosition,
                 y: yPosition,

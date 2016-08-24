@@ -23,37 +23,49 @@ app.classes.CloudsController.prototype = {
         this.cameraFrustum = cameraFrustum;
     },
 
+    setCameraRotation: function(cameraRotation) {
+        this.cameraRotation = cameraRotation;
+    },
+
+    calculateFrustumDiagonal: function() {
+        var x = this.cameraFrustum.right * 2,
+            y = this.cameraFrustum.top * 2;
+
+
+        this.frustumDiagonal = (Math.sqrt((x * x) + (y * y)) / 2) / this.cameraRotation.y;
+    },
+
     animateClouds: function() {
         var self = this;
 
         this.clouds.forEach(function(cloud) {
-            self._inverseCloudPositionByYIfCloudIsOutOfScreen(cloud);
+            //self._inverseCloudPositionByYIfCloudIsOutOfScreen(cloud);
             self._inverseCloudMoveDirectionIfCloudIsOutOfScreen(cloud);
 
             cloud.moveByXAxis();
-            cloud.moveByZAxis();
         });
     },
 
     _isCloudOutOfScreen: function(cloud) {
         var cloudPosition = cloud.getPosition(),
-            outOfScreenPadding = cloud.getWidth() / this.settings.outOfScreenModifier,
+            outOfScreenPadding = cloud.getWidth(),
             isDirectionPositive = cloud.moveByXAxisStep > 0,
             isDirectionNegative = !isDirectionPositive;
 
-        if (isDirectionPositive && (cloudPosition.x > this.cameraFrustum.right + outOfScreenPadding)) {
-            return true;
+        var xToX = this.cameraRotation.y * cloudPosition.x;
+
+        if (isDirectionPositive) {
+            return xToX > this.frustumDiagonal + outOfScreenPadding;
         }
 
-        if (isDirectionNegative && (cloudPosition.x < this.cameraFrustum.left - outOfScreenPadding)) {
-            return true;
+        if (isDirectionNegative) {
+            return xToX < -this.frustumDiagonal - outOfScreenPadding;
         }
     },
 
     _inverseCloudMoveDirectionIfCloudIsOutOfScreen: function(cloud) {
         if (this._isCloudOutOfScreen(cloud)) {
             cloud.inverseMoveByXAxisStep();
-            cloud.inverseMoveByZAxisStep();
         }
     },
 

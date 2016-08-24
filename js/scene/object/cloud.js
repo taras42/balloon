@@ -7,7 +7,6 @@ app.classes.Cloud = function(options) {
     this.mesh.receiveShadow = false;
 
     this.moveByXAxisStep = options.moveByXAxisStep || 0.009;
-    this.moveByZAxisStep = options.moveByZAxisStep || 0.009;
 
     this.initialPosition = options.initialPosition || {
         x: 0,
@@ -82,10 +81,6 @@ app.classes.Cloud.prototype = {
         this.moveByXAxisStep = this.moveByXAxisStep * -1;
     },
 
-    inverseMoveByZAxisStep: function() {
-        this.moveByZAxisStep = this.moveByZAxisStep * -1;
-    },
-
     setYPosition: function(y) {
         this.mesh.position.y = y;
     },
@@ -94,12 +89,6 @@ app.classes.Cloud.prototype = {
         factor = factor || this.moveByXAxisStep;
 
         this.mesh.position.x += factor;
-    },
-
-    moveByZAxis: function(factor) {
-        factor = factor || this.moveByZAxisStep;
-
-        this.mesh.position.z += factor;
     }
 };
 

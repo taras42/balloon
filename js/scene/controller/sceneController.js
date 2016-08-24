@@ -31,6 +31,9 @@ app.classes.SceneController.prototype = {
         this._setObjectsInitialPosition();
         this._setShadowLightTarget();
 
+        this.cloudsController.setCameraRotation(this.camera.getRotation());
+        this.cloudsController.calculateFrustumDiagonal();
+
         this.currentScenePosition = this.settings.ballonInitialYPos;
         this.compositeText.fadeIn();
 
@@ -39,16 +42,22 @@ app.classes.SceneController.prototype = {
 
     _setObjectsInitialPosition: function() {
 
+        this.lights.setShadowLightPosition({
+            x: 100,
+            y: 120,
+            z: 20
+        });
+
         this.flatClouds.setPosition({
-            x: 0,
+            x: -5.5,
             y: 2,
-            z: 37.5
+            z: 40
         });
 
         this.ballonController.setBallonPosition({
-            x: 0,
+            x: 5,
             y: this.settings.ballonInitialYPos,
-            z: 52
+            z: 50
         });
 
         this.mountain.setPosition({
@@ -57,19 +66,15 @@ app.classes.SceneController.prototype = {
             z: 45
         });
 
-        this.mountain.rotateByY(-(Math.PI/2) - (Math.PI/4));
+        this.mountain.rotateByY(-Math.PI/2);
 
         this.camera.setPosition({
-          x: 0,
-          y: 70,
+          x: 100,
+          y: 80,
           z: 150
         });
 
-        this.camera.rotate({
-          x: -0.6,
-          y: 0,
-          z: 0
-        });
+        this.camera.getCamera().lookAt(new THREE.Vector3(0, -2.75, 45));
     },
 
     _addObjectsToTheScene: function() {
@@ -102,10 +107,9 @@ app.classes.SceneController.prototype = {
             paddingFromCenterByX: 2,
             viewPortBoundaryByX: this.camera.getFrustum().right,
             moveByXAxisStep: 0.005,
-            moveByZAxisStep: 0.005,
             initialRotation: {
                 x: 0,
-                y: -Math.PI/4,
+                y: 0,
                 z: 0
             }
         }),
@@ -196,6 +200,7 @@ app.classes.SceneController.prototype = {
         this.camera.update();
         this.cameraFrustum = this.camera.getFrustum();
         this.cloudsController.setCameraFrustum(this.cameraFrustum);
+        this.cloudsController.calculateFrustumDiagonal();
         this.renderer.setSize( window.innerWidth, window.innerHeight );
     }
 };
