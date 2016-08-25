@@ -1,68 +1,68 @@
-app.classes.CloudsGenerator = function(options) {
-    this.cloudFactory = options.cloudFactory;
-    this.clouds = [];
+app.classes.ObjectsGenerator = function(options) {
+    this.objectFactory = options.objectFactory;
+    this.objects = [];
     this.currentSceneBoundary = 0;
-    this.currentSceneCloudsCount = 0;
+    this.currentSceneObjectsCount = 0;
 };
 
-app.classes.CloudsGenerator.prototype = {
+app.classes.ObjectsGenerator.prototype = {
 
-    generateClouds: function(options) {
-        var cloud,
-            cloudOptions,
-            cloudsCount = options.cloudsCount || 2;
+    generateObjects: function(options) {
+        var object,
+            objectOptions,
+            objectsCount = options.objectsCount || 2;
             topBoundary = options.topBoundary || 8,
             sceneHeigh = options.sceneHeigh || 4,
             sceneCount = Math.ceil(topBoundary/sceneHeigh),
-            cloudsPerScene = Math.floor(cloudsCount/sceneCount);
+            objectsPerScene = Math.floor(objectsCount/sceneCount);
 
         this.currentSceneBoundary = options.bottomBoundary;
-        this.currentSceneCloudsCount = 0;
+        this.currentSceneObjectsCount = 0;
 
-        for (var index = 0; index < cloudsCount; index++) {
-            cloudOptions = this._getCloudOptions(options);
+        for (var index = 0; index < objectsCount; index++) {
+            objectOptions = this._getObjectOptions(options);
 
-            cloud = this._addCloud(cloudOptions);
+            object = this._addObject(objectOptions);
 
-            this._setInverseYByModifier(cloud, options);
-            this._scaleIfZPositionIsNegative(cloud, options);
+            this._setInverseYByModifier(object, options);
+            this._scaleIfZPositionIsNegative(object, options);
 
             this._moveToNextSceneIfNecessary({
-                cloudsPerScene: cloudsPerScene,
+                objectsPerScene: objectsPerScene,
                 sceneHeigh: sceneHeigh
             });
         }
 
-        return this.clouds;
+        return this.objects;
     },
 
-    _addCloud: function(cloudOptions) {
-        var cloud = this.cloudFactory.create(cloudOptions);
+    _addObject: function(objectOptions) {
+        var object = this.objectFactory.create(objectOptions);
 
-        this.clouds.push(cloud);
-        this.currentSceneCloudsCount += 1;
+        this.objects.push(object);
+        this.currentSceneObjectsCount += 1;
 
-        return cloud;
+        return object;
     },
 
-    _scaleIfZPositionIsNegative: function(cloud, options) {
-        var cloudZPosition = cloud.getPosition().z;
+    _scaleIfZPositionIsNegative: function(object, options) {
+        var objectZPosition = object.getPosition().z;
 
-        if (cloudZPosition === options.zPosition.min) {
-            cloud.scale(options.minScale);
+        if (objectZPosition === options.zPosition.min) {
+            object.scale(options.minScale);
         }
     },
 
-    _setInverseYByModifier: function(cloud, options) {
+    _setInverseYByModifier: function(object, options) {
         var sceneHeigh = options.sceneHeigh,
             halfScene = sceneHeigh / 2
-            cloudYPosition = cloud.getPosition().y,
+            objectYPosition = object.getPosition().y,
             currentSceneCenter = (this.currentSceneBoundary + sceneHeigh) - halfScene;
 
-        cloud.setInverseYByModifier(((currentSceneCenter - Math.round(cloudYPosition)) * 2) * -1);
+        object.setInverseYByModifier(((currentSceneCenter - Math.round(objectYPosition)) * 2) * -1);
     },
 
-    _getCloudOptions: function(options) {
+    _getObjectOptions: function(options) {
         var xPosition = this._getXPosition(options);
         var yPosition = this._getYPosition(options);
         var zPosition = this._getZPosition(options);
@@ -120,9 +120,9 @@ app.classes.CloudsGenerator.prototype = {
     },
 
     _moveToNextSceneIfNecessary: function(options) {
-        if (this.currentSceneCloudsCount === options.cloudsPerScene) {
+        if (this.currentSceneObjectsCount === options.objectsPerScene) {
             this.currentSceneBoundary += options.sceneHeigh;
-            this.currentSceneCloudsCount = 0;
+            this.currentSceneObjectsCount = 0;
         }
     },
 

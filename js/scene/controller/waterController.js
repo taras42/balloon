@@ -6,7 +6,7 @@ app.classes.WaterController = function(options) {
 app.classes.WaterController.prototype = {
 
     settings: {
-        surfaceVertexY: 0.7,
+        surfaceVertexY: 0.6,
         fluctuationStep: 0.08,
         fluctuationSpeed: 240,
         disturtionValue: 5

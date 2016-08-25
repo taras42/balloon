@@ -14,7 +14,7 @@ app.classes.CloudsController.prototype = {
     generateClouds: function(options) {
         var self = this;
 
-        this.clouds = this.cloudsGenerator.generateClouds(options);
+        this.clouds = this.cloudsGenerator.generateObjects(options);
 
         return this.clouds;
     },
