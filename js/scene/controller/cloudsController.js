@@ -54,7 +54,7 @@ app.classes.CloudsController.prototype = {
         var cloudPlanePositiveShift,
             cloudPlaneNegativeShift,
             cameraYPos = this._getCameraNormalizedPosition(options),
-            cloudZShift = this._getCloudZShift(cloudPosition),
+            cloudZShift = this._getCloudZShift(cloudPosition, cameraYPos),
             cloudYShift = this._getCloudYShift(cloudPosition, cameraYPos);
 
         if (isDirectionPositive) {
@@ -84,9 +84,18 @@ app.classes.CloudsController.prototype = {
         }
     },
 
-    _getCloudZShift: function(cloudPosition) {
-        var delta = this.sceneCenter - cloudPosition.z;
-        return delta * -1;
+    // TODO plane shift compensation
+    _getCloudZShift: function(cloudPosition, cameraYPos) {
+        var delta = this.sceneCenter - cloudPosition.z,
+            modifier = 1;
+
+        if (cameraYPos > cloudPosition.y) {
+            delta = Math.sqrt(delta * delta);
+        } else {
+            modifier = -1;
+        }
+
+        return delta * modifier;
     },
 
     _getCloudYShift: function(cloudPosition, cameraPosition) {
