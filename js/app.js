@@ -23,8 +23,13 @@ var app = {
         });
 
         var cloudFactory = new this.classes.CloudFactory(models[1]);
+        var birdFactory = new this.classes.BirdFactory(models[5]);
+
         var cloudsGenerator = new this.classes.ObjectsGenerator({
             objectFactory: cloudFactory
+        });
+        var birdsGenerator = new this.classes.ObjectsGenerator({
+            objectFactory: birdFactory
         });
         var cloudsController = new this.classes.CloudsController({
             cloudsGenerator: cloudsGenerator

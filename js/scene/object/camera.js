@@ -51,6 +51,10 @@ app.classes.Camera.prototype = {
         return this._camera.rotation;
     },
 
+    getPosition: function() {
+        return this._camera.position;
+    },
+
     moveUp: function(factor) {
         factor = factor || 0.01;
         this._camera.position.y += factor;

@@ -5,6 +5,7 @@ app.classes.SceneController = function(options) {
 app.classes.SceneController.prototype = {
 
     settings: {
+        sceneCenter: 45,
         ballonInitialYPos: 0.65,
         nextSceneStep: 8,
         lastScenePosition: 32,
@@ -27,14 +28,12 @@ app.classes.SceneController.prototype = {
         this.flatClouds = options.flatClouds;
         this.water = options.water;
 
-        this.cameraFrustum = this.camera.getFrustum();
-
         this._addObjectsToTheScene();
         this._setObjectsInitialPosition();
         this._setShadowLightTarget();
 
-        this.cloudsController.setCameraRotation(this.camera.getRotation());
-        this.cloudsController.calculateFrustumDiagonal();
+        this.cloudsController.calculateFrustumDiagonal(this.camera);
+        this.cloudsController.setSceneCenter(this.settings.sceneCenter);
 
         this.currentScenePosition = this.settings.ballonInitialYPos;
         this.compositeText.fadeIn();
@@ -59,7 +58,7 @@ app.classes.SceneController.prototype = {
         this.water.setPosition({
             x: 0.3,
             y: -2.7,
-            z: 45
+            z: this.settings.sceneCenter
         });
 
         this.water.rotateByY(-Math.PI/2);
@@ -73,18 +72,21 @@ app.classes.SceneController.prototype = {
         this.mountain.setPosition({
             x: 0,
             y: -2.75,
-            z: 45
+            z: this.settings.sceneCenter
         });
 
         this.mountain.rotateByY(-Math.PI/2);
 
         this.camera.setPosition({
-          x: 100,
-          y: 80,
-          z: 150
+          x: 55,
+          y: 45,
+          z: 100
         });
 
-        this.camera.getCamera().lookAt(new THREE.Vector3(0, -2.75, 45));
+        this.camera.getCamera().rotation.order = 'YXZ';
+
+        this.camera.getCamera().rotateY(Math.PI/4);
+        this.camera.getCamera().rotateX(-Math.PI/6);
     },
 
     _addObjectsToTheScene: function() {
@@ -103,21 +105,19 @@ app.classes.SceneController.prototype = {
     _generateClouds: function() {
         var self = this;
 
-        this.cloudsController.setCameraFrustum(this.cameraFrustum);
-
         this.clouds = this.cloudsController.generateClouds({
             topBoundary: 34,
             bottomBoundary: 2,
-            cloudsCount: 10,
+            objectsCount: 10,
             sceneHeigh: 8,
             zPosition: {
-                min: [20, 25, 30],
-                max: [70, 75, 80]
+                min: [25, 30, 35],
+                max: [60, 65, 70]
             },
             minScale: 0.7,
             paddingFromCenterByX: 2,
             viewPortBoundaryByX: this.camera.getFrustum().right,
-            moveByXAxisStep: 0.005,
+            moveByXAxisStep: 0.5,
             initialRotation: {
                 x: 0,
                 y: 0,
@@ -199,7 +199,9 @@ app.classes.SceneController.prototype = {
     updateScene: function() {
         this.ballonController.animateBallon(this.currentScenePosition);
         this._moveCameraToFollowBallon();
-        this.cloudsController.animateClouds();
+        this.cloudsController.animateClouds({
+            camera: this.camera
+        });
         this.waterController.animateWater();
         this.flatClouds.rotateByY(this.settings.flatCloudsRotationFactor);
     },
@@ -210,9 +212,7 @@ app.classes.SceneController.prototype = {
 
     resizeScene: function() {
         this.camera.update();
-        this.cameraFrustum = this.camera.getFrustum();
-        this.cloudsController.setCameraFrustum(this.cameraFrustum);
-        this.cloudsController.calculateFrustumDiagonal();
+        this.cloudsController.calculateFrustumDiagonal(this.camera);
         this.renderer.setSize( window.innerWidth, window.innerHeight );
     }
 };

@@ -11,6 +11,10 @@ app.classes.CloudsController.prototype = {
         outOfScreenModifier: 1.5
     },
 
+    setSceneCenter: function(sceneCenter) {
+        this.sceneCenter = sceneCenter;
+    },
+
     generateClouds: function(options) {
         var self = this;
 
@@ -19,52 +23,57 @@ app.classes.CloudsController.prototype = {
         return this.clouds;
     },
 
-    setCameraFrustum: function(cameraFrustum) {
-        this.cameraFrustum = cameraFrustum;
+    calculateFrustumDiagonal: function(camera) {
+        var cameraFrustum = camera.getFrustum(),
+            cameraRotation = camera.getRotation();
+
+        var x = cameraFrustum.right * 2,
+            y = cameraFrustum.top * 2;
+
+        var rotAngle = cameraRotation.x * -1;
+        var yProjection = y / rotAngle;
+
+        this.frustumDiagonal = Math.sqrt((x * x) + (yProjection * yProjection)) / 2;
     },
 
-    setCameraRotation: function(cameraRotation) {
-        this.cameraRotation = cameraRotation;
-    },
-
-    calculateFrustumDiagonal: function() {
-        var x = this.cameraFrustum.right * 2,
-            y = this.cameraFrustum.top * 2;
-
-
-        this.frustumDiagonal = (Math.sqrt((x * x) + (y * y)) / 2) / this.cameraRotation.y;
-    },
-
-    animateClouds: function() {
+    animateClouds: function(options) {
         var self = this;
 
         this.clouds.forEach(function(cloud) {
-            //self._inverseCloudPositionByYIfCloudIsOutOfScreen(cloud);
-            self._inverseCloudMoveDirectionIfCloudIsOutOfScreen(cloud);
-
+            self._inverseCloudMoveDirectionIfCloudIsOutOfScreen(cloud, options);
             cloud.moveByXAxis();
         });
     },
 
-    _isCloudOutOfScreen: function(cloud) {
+    _isCloudOutOfScreen: function(cloud, options) {
         var cloudPosition = cloud.getPosition(),
             outOfScreenPadding = cloud.getWidth(),
             isDirectionPositive = cloud.moveByXAxisStep > 0,
             isDirectionNegative = !isDirectionPositive;
 
-        var xToX = this.cameraRotation.y * cloudPosition.x;
+        var cloudPlanePositiveShift,
+            cloudPlaneNegativeShift,
+            cameraYPos = this._getCameraNormalizedPosition(options),
+            cloudZShift = this._getCloudZShift(cloudPosition),
+            cloudYShift = this._getCloudYShift(cloudPosition, cameraYPos);
 
         if (isDirectionPositive) {
-            return xToX > this.frustumDiagonal + outOfScreenPadding;
+            cloudPlanePositiveShift = this.frustumDiagonal +
+                outOfScreenPadding + cameraYPos + cloudZShift + cloudYShift;
+
+            return cloudPosition.x > cloudPlanePositiveShift;
         }
 
         if (isDirectionNegative) {
-            return xToX < -this.frustumDiagonal - outOfScreenPadding;
+            cloudPlaneNegativeShift = -this.frustumDiagonal
+                - outOfScreenPadding - cameraYPos - cloudZShift - cloudYShift;
+
+            return cloudPosition.x < cloudPlaneNegativeShift;
         }
     },
 
-    _inverseCloudMoveDirectionIfCloudIsOutOfScreen: function(cloud) {
-        if (this._isCloudOutOfScreen(cloud)) {
+    _inverseCloudMoveDirectionIfCloudIsOutOfScreen: function(cloud, options) {
+        if (this._isCloudOutOfScreen(cloud, options)) {
             cloud.inverseMoveByXAxisStep();
         }
     },
@@ -73,5 +82,22 @@ app.classes.CloudsController.prototype = {
         if (this._isCloudOutOfScreen(cloud)) {
             cloud.inversePositionByY();
         }
+    },
+
+    _getCloudZShift: function(cloudPosition) {
+        var delta = this.sceneCenter - cloudPosition.z;
+        return delta * -1;
+    },
+
+    _getCloudYShift: function(cloudPosition, cameraPosition) {
+        var delta = cloudPosition.y - cameraPosition;
+
+        return delta;
+    },
+
+    _getCameraNormalizedPosition: function(options) {
+        var cameraPosition = options.camera.getPosition();
+
+        return cameraPosition.y - this.sceneCenter;
     }
 }
