@@ -23,6 +23,7 @@ app.classes.SceneController.prototype = {
         this.ballonController = options.ballonController;
         this.cloudsController = options.cloudsController;
         this.waterController = options.waterController;
+        this.birdsController = options.birdsController;
         this.compositeText = options.compositeText;
         this.eventBus = options.eventBus;
         this.flatClouds = options.flatClouds;
@@ -105,27 +106,19 @@ app.classes.SceneController.prototype = {
     _generateClouds: function() {
         var self = this;
 
-        this.clouds = this.cloudsController.generateClouds({
-            topBoundary: 34,
-            bottomBoundary: 2,
-            objectsCount: 10,
-            sceneHeigh: 8,
-            zPosition: {
-                min: [25, 30, 35],
-                max: [60, 65, 70]
-            },
-            minScale: 0.7,
-            paddingFromCenterByX: 2,
-            viewPortBoundaryByX: this.camera.getFrustum().right,
-            moveByXAxisStep: 0.5,
-            initialRotation: {
-                x: 0,
-                y: 0,
-                z: 0
-            }
-        }),
+        var clouds = this.cloudsController.generateClouds({
+            cameraFrustum: this.camera.getFrustum()
+        });
 
-        this.clouds.forEach(function(cloud) {
+        var birds = this.birdsController.generateBirds({
+            cameraFrustum: this.camera.getFrustum()
+        });
+
+        birds.forEach(function(bird) {
+            self.scene.add(bird.getMesh());
+        });
+
+        clouds.forEach(function(cloud) {
             self.scene.add(cloud.getMesh());
         });
     },

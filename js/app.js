@@ -43,11 +43,16 @@ var app = {
             water: water
         });
 
+        var birdsController = new this.classes.BirdsController({
+            birdsGenerator: birdsGenerator
+        });
+
         var renderer = this.createRenderer(document.getElementById("world"));
 
         this.createSceneController({
             eventBus: eventBus,
             compositeText: compositeText,
+            birdsController: birdsController,
             cloudsController: cloudsController,
             ballonController: ballonController,
             waterController: waterController,
