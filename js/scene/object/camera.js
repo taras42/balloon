@@ -13,7 +13,10 @@ app.classes.Camera = function() {
 }
 
 app.classes.Camera.prototype = {
+
     initialize: function() {
+        this.frustumDiagonal = 0;
+
         var frustum = this.getFrustum();
 
         this._camera = new THREE.OrthographicCamera(
@@ -23,6 +26,10 @@ app.classes.Camera.prototype = {
             frustum.bottom,
             this.settings.near,
             this.settings.far);
+    },
+
+    setSceneCenter: function(options) {
+        this.sceneCenter = options.sceneCenter;
     },
 
     getCamera: function() {
@@ -69,6 +76,8 @@ app.classes.Camera.prototype = {
         this._camera.bottom = this.settings.bottom;
 
         this._camera.updateProjectionMatrix();
+
+        this.calculateFrustumDiagonal();
     },
 
     setPosition: function(position) {
@@ -81,14 +90,80 @@ app.classes.Camera.prototype = {
         this._camera.position.set(position.x, position.y, position.z);
     },
 
-    rotate: function(rotation) {
-        rotation = rotation || {
-          x: 0,
-          y: 0,
-          z: 0
-        };
+    isObjectOutOfCameraView: function(object) {
+        var objectPosition = object.getPosition(),
+            outOfScreenPadding = object.getWidth(),
+            isDirectionPositive = object.moveByXAxisStep > 0,
+            isDirectionNegative = !isDirectionPositive;
 
-        this._camera.rotation.set(rotation.x, rotation.y, rotation.z);
+        var objectPlanePositiveShift,
+            objectPlaneNegativeShift,
+            cameraYPos = this._getCameraNormalizedPosition(),
+            objectZShift = this._getObjectZShift(objectPosition, cameraYPos),
+            objectYShift = this._getObjectYShift(objectPosition, cameraYPos);
+
+        if (isDirectionPositive) {
+            objectPlanePositiveShift = this.frustumDiagonal +
+                outOfScreenPadding + cameraYPos + objectZShift + objectYShift;
+
+            return objectPosition.x > objectPlanePositiveShift;
+        }
+
+        if (isDirectionNegative) {
+            objectPlaneNegativeShift = -this.frustumDiagonal
+                - outOfScreenPadding - cameraYPos - objectZShift - objectYShift;
+
+            return objectPosition.x < objectPlaneNegativeShift;
+        }
+    },
+
+    _getObjectZShift: function(objectPosition, cameraNormalizedYPos) {
+        var delta = this.sceneCenter - objectPosition.z,
+            modifier = 1;
+
+        if (cameraNormalizedYPos > objectPosition.y) {
+            delta = Math.sqrt(delta * delta);
+        } else {
+            modifier = -1;
+        }
+
+        return delta * modifier;
+    },
+
+    _getObjectYShift: function(objectPosition, cameraNormalizedYPos) {
+        var delta = objectPosition.y - cameraNormalizedYPos;
+
+        return delta;
+    },
+
+    _getCameraNormalizedPosition: function() {
+        var position = this.getPosition();
+
+        return position.y - this.sceneCenter;
+    },
+
+    calculateFrustumDiagonal: function() {
+        var frustum = this.getFrustum(),
+            rotation = this.getRotation();
+
+        var x = frustum.right * 2,
+            y = frustum.top * 2;
+
+        var rotAngle = rotation.x * -1;
+        var yProjection = y / rotAngle;
+
+        this.frustumDiagonal = Math.sqrt((x * x) + (yProjection * yProjection)) / 2;
+    },
+
+    rotate: function(options) {
+        options = options || {};
+
+        if (options.order) {
+            this._camera.rotation.order = options.order;
+        }
+
+        this._camera.rotation.set(options.x || 0, options.y || 0, options.z || 0);
+        this.calculateFrustumDiagonal();
     },
 
     _calculateAspect: function() {

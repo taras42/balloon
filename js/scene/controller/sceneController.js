@@ -33,8 +33,9 @@ app.classes.SceneController.prototype = {
         this._setObjectsInitialPosition();
         this._setShadowLightTarget();
 
-        this.cloudsController.calculateFrustumDiagonal(this.camera);
-        this.cloudsController.setSceneCenter(this.settings.sceneCenter);
+        this.camera.setSceneCenter({
+            sceneCenter: this.settings.sceneCenter
+        });
 
         this.currentScenePosition = this.settings.ballonInitialYPos;
         this.compositeText.fadeIn();
@@ -43,19 +44,31 @@ app.classes.SceneController.prototype = {
     },
 
     _setObjectsInitialPosition: function() {
+        this._setLightsPosition();
+        this._setFlatCloudsPosition();
+        this._setWaterPosition();
+        this._setBallonPosition();
+        this._setMountainPosition();
+        this._setCameraPosition();
+    },
 
+    _setLightsPosition: function() {
         this.lights.setShadowLightPosition({
             x: 100,
             y: 120,
             z: 20
         });
+    },
 
+    _setFlatCloudsPosition: function() {
         this.flatClouds.setPosition({
             x: -5.5,
             y: 2,
             z: 40
         });
+    },
 
+    _setWaterPosition: function() {
         this.water.setPosition({
             x: 0.3,
             y: -2.7,
@@ -63,13 +76,17 @@ app.classes.SceneController.prototype = {
         });
 
         this.water.rotateByY(-Math.PI/2);
+    },
 
+    _setBallonPosition: function() {
         this.ballonController.setBallonPosition({
             x: 5,
             y: this.settings.ballonInitialYPos,
             z: 50
         });
+    },
 
+    _setMountainPosition: function() {
         this.mountain.setPosition({
             x: 0,
             y: -2.75,
@@ -77,17 +94,20 @@ app.classes.SceneController.prototype = {
         });
 
         this.mountain.rotateByY(-Math.PI/2);
+    },
 
+    _setCameraPosition: function() {
         this.camera.setPosition({
           x: 55,
           y: 45,
           z: 100
         });
 
-        this.camera.getCamera().rotation.order = 'YXZ';
-
-        this.camera.getCamera().rotateY(Math.PI/4);
-        this.camera.getCamera().rotateX(-Math.PI/6);
+        this.camera.rotate({
+            order: 'YXZ',
+            y: Math.PI/4,
+            x: -Math.PI/6
+        });
     },
 
     _addObjectsToTheScene: function() {
@@ -206,7 +226,6 @@ app.classes.SceneController.prototype = {
 
     resizeScene: function() {
         this.camera.update();
-        this.cloudsController.calculateFrustumDiagonal(this.camera);
         this.renderer.setSize( window.innerWidth, window.innerHeight );
     }
 };
