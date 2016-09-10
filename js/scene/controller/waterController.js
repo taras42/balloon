@@ -8,7 +8,7 @@ app.classes.WaterController.prototype = {
     settings: {
         surfaceVertexY: 0.6,
         fluctuationStep: 0.08,
-        fluctuationSpeed: 240,
+        fluctuationAmplitude: 240,
         disturtionValue: 5
     },
 
@@ -35,7 +35,7 @@ app.classes.WaterController.prototype = {
         for (var i = 0; i < this.surfaceVertices.length; i++) {
             var vertex = this.surfaceVertices[i];
 
-            vertex.y += Math.cos(this.disturtionValues[i]) / this.settings.fluctuationSpeed;
+            vertex.y += Math.cos(this.disturtionValues[i]) / this.settings.fluctuationAmplitude;
             this.disturtionValues[i] += this.settings.fluctuationStep;
         }
 

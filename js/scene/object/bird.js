@@ -1,6 +1,8 @@
 app.classes.Bird = function(options) {
-    var geometry = options.geometry,
+    var geometry = options.geometry.clone(),
         materials = options.materials;
+
+    geometry.computeBoundingSphere();
 
     this.mesh = new THREE.Mesh(geometry, new THREE.MultiMaterial(materials));
     this.mesh.castShadow = true;
@@ -30,8 +32,9 @@ app.classes.Bird = function(options) {
     this.identifyWings();
 
     this.swingStep = options.swingStep || 0.2;
-    this.swingSpeed = options.swingSpeed || 100;
-    this.swingValue = 0;
+    this.swingAmplitude = options.swingAmplitude || 12;
+    this.swingValue = 10;
+    this.swingModifier = Math.round(Math.random()) ? 1 : -1;
 };
 
 app.classes.Bird.prototype = {
@@ -49,7 +52,7 @@ app.classes.Bird.prototype = {
     },
 
     fly: function() {
-        var delta = Math.cos(this.swingValue) / this.swingSpeed;
+        var delta = Math.cos(this.swingValue) / this.swingAmplitude * this.swingModifier;
 
         this.firstWing[0].y += delta;
         this.firstWing[1].y += delta;
