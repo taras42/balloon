@@ -96,12 +96,6 @@ app.classes.CloudsController.prototype = {
         }
     },
 
-    _inverseCloudPositionByYIfCloudIsOutOfScreen: function(cloud) {
-        if (this._isCloudOutOfScreen(cloud)) {
-            cloud.inversePositionByY();
-        }
-    },
-
     // TODO plane shift compensation
     _getCloudZShift: function(cloudPosition, cameraYPos) {
         var delta = this.sceneCenter - cloudPosition.z,

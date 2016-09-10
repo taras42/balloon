@@ -24,7 +24,6 @@ app.classes.ObjectsGenerator.prototype = {
 
             object = this._addObject(objectOptions);
 
-            this._setInverseYByModifier(object, options);
             this._scaleIfZPositionIsNegative(object, options);
 
             this._moveToNextSceneIfNecessary({
@@ -51,15 +50,6 @@ app.classes.ObjectsGenerator.prototype = {
         if (objectZPosition === options.zPosition.min) {
             object.scale(options.minScale);
         }
-    },
-
-    _setInverseYByModifier: function(object, options) {
-        var sceneHeigh = options.sceneHeigh,
-            halfScene = sceneHeigh / 2
-            objectYPosition = object.getPosition().y,
-            currentSceneCenter = (this.currentSceneBoundary + sceneHeigh) - halfScene;
-
-        object.setInverseYByModifier(((currentSceneCenter - Math.round(objectYPosition)) * 2) * -1);
     },
 
     _getObjectOptions: function(options) {

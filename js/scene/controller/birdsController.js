@@ -9,7 +9,7 @@ app.classes.BirdsController.prototype =  {
     },
 
     generateBirds: function(options) {
-        return this.birdsGenerator.generateObjects({
+        this.birds = this.birdsGenerator.generateObjects({
             topBoundary: 34,
             bottomBoundary: 2,
             objectsCount: 10,
@@ -24,9 +24,17 @@ app.classes.BirdsController.prototype =  {
             moveByXAxisStep: 0.5,
             initialRotation: {
                 x: 0,
-                y: 0,
+                y: Math.PI,
                 z: 0
             }
+        });
+
+        return this.birds;
+    },
+
+    animateBirds: function() {
+        this.birds.forEach(function(bird) {
+            bird.fly();
         });
     }
 

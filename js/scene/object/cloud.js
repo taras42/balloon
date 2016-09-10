@@ -66,17 +66,6 @@ app.classes.Cloud.prototype = {
         this.initialRotation && this.rotate(this.initialRotation);
     },
 
-    setInverseYByModifier: function(inverseYByModifier) {
-        this.inverseYByModifier = inverseYByModifier;
-    },
-
-    inversePositionByY: function() {
-        var position = this.getPosition();
-
-        this.setYPosition(position.y - this.inverseYByModifier);
-        this.setInverseYByModifier(this.inverseYByModifier * -1);
-    },
-
     inverseMoveByXAxisStep: function() {
         this.moveByXAxisStep = this.moveByXAxisStep * -1;
     },

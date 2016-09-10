@@ -6,7 +6,11 @@ app.classes.Bird = function(options) {
     this.mesh.castShadow = true;
     this.mesh.receiveShadow = false;
 
-    this.moveByXAxisStep = options.moveByXAxisStep || 0.009;
+    this.mesh.material.materials.forEach(function(material) {
+        material.side = THREE.DoubleSide;
+    });
+
+    this.moveByXAxisStep = options.moveByXAxisStep || 0.01;
 
     this.initialPosition = options.initialPosition || {
         x: 0,
@@ -22,9 +26,44 @@ app.classes.Bird = function(options) {
 
     this.resetToInitialPosition();
     this.rotateToInitialPosition();
+
+    this.identifyWings();
+
+    this.swingStep = options.swingStep || 0.2;
+    this.swingSpeed = options.swingSpeed || 100;
+    this.swingValue = 0;
 };
 
 app.classes.Bird.prototype = {
+
+    identifyWings: function() {
+        var verticesCopy = [].concat(this.mesh.geometry.vertices);
+        var sorterArray = verticesCopy.sort(function(a, b) {
+            return a.z - b.z;
+        });
+
+        var length = sorterArray.length;
+
+        this.firstWing = [sorterArray[0], sorterArray[1]];
+        this.secondWing = [sorterArray[length - 1], sorterArray[length - 2]];
+    },
+
+    fly: function() {
+        var delta = Math.cos(this.swingValue) / this.swingSpeed;
+
+        this.firstWing[0].y += delta;
+        this.firstWing[1].y += delta;
+        this.secondWing[0].y += delta;
+        this.secondWing[1].y += delta;
+
+        this.swingValue += this.swingStep;
+
+        this.mesh.geometry.verticesNeedUpdate = true;
+    },
+
+    turnAroundByY: function() {
+        this.mesh.rotation.y = Math.PI;
+    },
 
     getMesh: function() {
         return this.mesh;
@@ -34,10 +73,6 @@ app.classes.Bird.prototype = {
         options = options || {};
 
         this.mesh.rotation.set(options.x, options.y, options.z);
-    },
-
-    rotateByY: function(factor) {
-        this.mesh.rotation.y += factor;
     },
 
     setPosition: function(options) {
@@ -50,8 +85,6 @@ app.classes.Bird.prototype = {
         return this.mesh.position;
     },
 
-    scale: function(scaleFactor) {},
-
     getWidth: function() {
         return this.mesh.geometry.boundingSphere.radius * 2;
     },
@@ -62,17 +95,6 @@ app.classes.Bird.prototype = {
 
     rotateToInitialPosition: function() {
         this.initialRotation && this.rotate(this.initialRotation);
-    },
-
-    setInverseYByModifier: function(inverseYByModifier) {
-        this.inverseYByModifier = inverseYByModifier;
-    },
-
-    inversePositionByY: function() {
-        var position = this.getPosition();
-
-        this.setYPosition(position.y - this.inverseYByModifier);
-        this.setInverseYByModifier(this.inverseYByModifier * -1);
     },
 
     inverseMoveByXAxisStep: function() {
