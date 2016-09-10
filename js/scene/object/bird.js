@@ -61,7 +61,7 @@ app.classes.Bird.prototype = {
         this.mesh.geometry.verticesNeedUpdate = true;
     },
 
-    turnAroundByY: function() {
+    turnAround: function() {
         this.mesh.rotation.y = Math.PI;
     },
 

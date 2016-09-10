@@ -20,7 +20,7 @@ app.classes.CloudsController.prototype = {
             minScale: 0.7,
             paddingFromCenterByX: 2,
             viewPortBoundaryByX: options.cameraFrustum.right,
-            moveByXAxisStep: 0.5,
+            moveByXAxisStep: 0.005,
             initialRotation: {
                 x: 0,
                 y: 0,

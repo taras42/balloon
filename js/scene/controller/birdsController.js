@@ -21,7 +21,7 @@ app.classes.BirdsController.prototype =  {
             minScale: 0.7,
             paddingFromCenterByX: 2,
             viewPortBoundaryByX: options.cameraFrustum.right,
-            moveByXAxisStep: 0.5,
+            moveByXAxisStep: 0.2,
             initialRotation: {
                 x: 0,
                 y: Math.PI,
@@ -32,10 +32,22 @@ app.classes.BirdsController.prototype =  {
         return this.birds;
     },
 
-    animateBirds: function() {
+    animateBirds: function(options) {
+        var self = this;
+
         this.birds.forEach(function(bird) {
+            self._changeFlyDirectionIfBirdIsOutOfCameraView(bird, options);
+            bird.moveByXAxis();
             bird.fly();
         });
-    }
+    },
 
+    _changeFlyDirectionIfBirdIsOutOfCameraView: function(bird, options) {
+        var camera = options.camera;
+
+        if (camera.isObjectOutOfCameraView(bird)) {
+            bird.inverseMoveByXAxisStep();
+            bird.turnAround();
+        }
+    }
 }

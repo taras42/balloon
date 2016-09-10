@@ -215,7 +215,9 @@ app.classes.SceneController.prototype = {
         this.cloudsController.animateClouds({
             camera: this.camera
         });
-        this.birdsController.animateBirds();
+        this.birdsController.animateBirds({
+            camera: this.camera
+        });
         this.waterController.animateWater();
         this.flatClouds.rotateByY(this.settings.flatCloudsRotationFactor);
     },
