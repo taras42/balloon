@@ -23,10 +23,16 @@ app.classes.BirdsController.prototype =  {
             viewPortBoundaryByX: options.cameraFrustum.right,
             moveByXAxisStep: 0.2,
             getOptions: function(generatedOptions) {
+                var moveByXAxisStep = generatedOptions.moveByXAxisStep;
+
+                var yRotation = moveByXAxisStep > 0
+                    ? Math.PI
+                    : 0;
+
                 return {
                     initialRotation: {
                         x: 0,
-                        y: Math.PI,
+                        y: yRotation,
                         z: 0
                     }
                 }
