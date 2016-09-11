@@ -65,7 +65,7 @@ app.classes.Bird.prototype = {
     },
 
     turnAround: function() {
-        this.mesh.rotation.y = Math.PI;
+        this.mesh.rotation.y += Math.PI;
     },
 
     getMesh: function() {

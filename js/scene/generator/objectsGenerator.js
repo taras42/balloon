@@ -59,15 +59,20 @@ app.classes.ObjectsGenerator.prototype = {
         var moveModifier = this._getInversionModifier();
         var moveByXAxisStep = this._getMoveByXAxisStep(options, moveModifier);
 
-        return {
+        var generatedOptions = {
             moveByXAxisStep: moveByXAxisStep,
             initialPosition: {
                 x: xPosition,
                 y: yPosition,
                 z: zPosition
-            },
-            initialRotation: options.initialRotation
-        }
+            }
+        };
+
+        var objectOptions = options.getOptions
+            ?  options.getOptions(generatedOptions)
+            : {};
+
+        return app.util.extend(objectOptions, generatedOptions);
     },
 
     _getZPosition: function(options) {

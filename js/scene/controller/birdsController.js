@@ -22,10 +22,14 @@ app.classes.BirdsController.prototype =  {
             paddingFromCenterByX: 2,
             viewPortBoundaryByX: options.cameraFrustum.right,
             moveByXAxisStep: 0.2,
-            initialRotation: {
-                x: 0,
-                y: Math.PI,
-                z: 0
+            getOptions: function(generatedOptions) {
+                return {
+                    initialRotation: {
+                        x: 0,
+                        y: Math.PI,
+                        z: 0
+                    }
+                }
             }
         });
 

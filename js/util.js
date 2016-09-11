@@ -5,5 +5,7 @@ app.util = {
                 target[key] = source[key];
             }
         }
+
+        return target;
     }
 }

@@ -21,10 +21,14 @@ app.classes.CloudsController.prototype = {
             paddingFromCenterByX: 2,
             viewPortBoundaryByX: options.cameraFrustum.right,
             moveByXAxisStep: 0.005,
-            initialRotation: {
-                x: 0,
-                y: 0,
-                z: 0
+            getOptions: function(generatedOptions) {
+                return {
+                    initialRotation: {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    }
+                }
             }
         });
 
