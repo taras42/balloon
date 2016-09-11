@@ -8,7 +8,7 @@ app.classes.SceneController.prototype = {
         sceneCenter: 45,
         ballonInitialYPos: 0.65,
         nextSceneStep: 8,
-        lastScenePosition: 32,
+        lastScenePosition: 40,
         flatCloudsRotationFactor: 0.004,
         startMoveCameraPosition: 0
     },
